@@ -10,7 +10,10 @@ public class BoatManager : MonoBehaviour {
 	// ボートの配列
 	const int BOATS_NUM = 5;
 	public GameObject[] Boats = new GameObject[BOATS_NUM];
+	// ボートの生存
 	bool[] BoatsAlive = new bool[BOATS_NUM];
+	// ボートの詳細の構造体配列
+	BoatStr[] BoatArray = new BoatStr[BOATS_NUM];
 
 	bool HaveTreasure =false;
 
@@ -35,17 +38,11 @@ public class BoatManager : MonoBehaviour {
 		}
 	}
 
-	BoatStr[] BoatArray = { new BoatStr{Outward1=true,HaveTreashre1=false,Second1=0,Count1=0},
-		new BoatStr{Outward1=true,HaveTreashre1=false,Second1=0,Count1=0},
-		new BoatStr{Outward1=true,HaveTreashre1=false,Second1=0,Count1=0},
-		new BoatStr{Outward1=true,HaveTreashre1=false,Second1=0,Count1=0},
-		new BoatStr{Outward1=true,HaveTreashre1=false,Second1=0,Count1=0},
-	};
-			
 	// Use this for initialization
 	void Start () {
 		for(int i = 0; i < Boats.Length; i++){
 			BoatsAlive[i] = true;
+			BoatArray [i] = new BoatStr{ Outward1 = true, HaveTreashre1 = false, Second1 = 0, Count1 = 0 };
 		}
 	}
 	
@@ -70,10 +67,12 @@ public class BoatManager : MonoBehaviour {
 				move.setXSpeed (0);
 			}
 
+			// 左端についた時の処理
 			if (boat.transform.position.x < -3.7f) {
 				Debug.Log ("stop");
 				move.setXSpeed (0);
 				Outward = false;
+				// ボタンを押したら帰る
 				if (Input.GetMouseButtonDown (0)) {
 					boat.transform.position = new Vector3 (-3.6f, boat.transform.position.y, 0);
 					boat.transform.Rotate (new Vector3 (0, 180, 0));
@@ -82,6 +81,7 @@ public class BoatManager : MonoBehaviour {
 				}
 			}		
 	
+			// 初期位置に戻る
 			if (boat.transform.position.x >= 6) {
 				boat.transform.Rotate (new Vector3 (0, 180, 0));
 				boat.transform.position = new Vector3 (5, boat.transform.position.y, 0);
@@ -95,6 +95,7 @@ public class BoatManager : MonoBehaviour {
 		Outward = sOutward;
 	}
 
+	// 財宝の取得及び速度設定
 	void TreasureGet(int boatNum){
 		GameObject boat = Boats [boatNum];
 
@@ -103,6 +104,7 @@ public class BoatManager : MonoBehaviour {
 			Count = (int)Second;
 			Debug.Log ("Time:" + (int)Count);
 		}
+		// 6カウントすると初期位置に戻る
 		if (Second >= 6f) {
 			boat.transform.position = new Vector3 (5, boat.transform.position.y, 0);
 			Second = 0;
@@ -111,6 +113,7 @@ public class BoatManager : MonoBehaviour {
 		}
 	}
 		
+	// サメに食べられた時の処理
 	public void BoatDie(string boatName){
 		for (int i = 0; i < Boats.Length; i++) {
 			if (Boats [i].name == boatName) {
