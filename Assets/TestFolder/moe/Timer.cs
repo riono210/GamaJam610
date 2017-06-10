@@ -16,7 +16,7 @@ public class Timer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
      remainTime -= Time.deltaTime;
-     GetComponent<Text>().text = remainTime.ToString("F2");
+     GetComponent<Text>().text = "TIME:" + remainTime.ToString("F0");
 
         if (remainTime <= 0)
         {
