@@ -30,16 +30,20 @@ public class SharkControll : MonoBehaviour {
     [SerializeField]
     List<GameObject> EatList = new List<GameObject>();
 
-	// Use this for initialization
-	void Start () {
+    public Slider gauge;
+
+    Animator anim;
+
+    // Use this for initialization
+    void Start () {
 		_hungryNum = Random.value * 0.8f + 0.2f;
 
         _boatMgr = FindObjectOfType<BoatManager>();
+        anim = GetComponent<Animator>();
 
     }
 
-    public Slider gauge;
-
+    
 	
 	// Update is called once per frame
 	void Update () {
@@ -77,7 +81,7 @@ public class SharkControll : MonoBehaviour {
                 break;
 
         }
-        
+        anim.SetInteger("status", (int)_sharkStats);
 	}
 
 
