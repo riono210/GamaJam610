@@ -14,6 +14,7 @@ public class MoveObj : MonoBehaviour
 
     void Start ()
     {
+        speed_y = 0.095f + Random.value * 0.05f;
         rg = GetComponent<Rigidbody>();
 	}
 	

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FallingMgr : MonoBehaviour
 {
+    public Timer _time;
 
     const int FALLPOS_NUM = 3; 
     public Transform[] fallPos = new Transform[FALLPOS_NUM];
@@ -45,7 +46,9 @@ public class FallingMgr : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(createMargin);
+            float progress = (Timer.LIMIT_TIME - _time.remainTime)/Timer.LIMIT_TIME*0.3f;
+
+            yield return new WaitForSeconds(createMargin - progress);
             int posIndex = Random.Range(0, FALLPOS_NUM);
             Instantiate(prefabs[Random.Range(0, (int)FallObj.Obj_Num)], fallPos[posIndex].position, Quaternion.identity, null);
         }
