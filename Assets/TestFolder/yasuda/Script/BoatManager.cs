@@ -13,7 +13,7 @@ public class BoatManager : MonoBehaviour {
 	// ボートの生存
 	bool[] BoatsAlive = new bool[BOATS_NUM];
 	// ボートの詳細の構造体配列
-	BoatStr[] BoatArray = new BoatStr[BOATS_NUM];
+	public BoatStr[] BoatArray = new BoatStr[BOATS_NUM];
 
 //	bool HaveTreasure =false;
 //
@@ -166,7 +166,13 @@ public class BoatManager : MonoBehaviour {
 		}
 	}
 
-	bool getBoatAlive(int boatNum){
-		return BoatsAlive [boatNum];
+	public int getBoatAlive(){
+		int remain = 0;
+		for (int i = 0; i < 5; i++) {
+			if (BoatsAlive [i] == true) {
+				remain++;
+			}
+		}
+		return remain;
 	}
 }
