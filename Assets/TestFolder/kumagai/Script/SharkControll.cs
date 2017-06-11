@@ -112,7 +112,7 @@ public class SharkControll : MonoBehaviour {
 
     void OnCollisionEnter(Collision otherCol)
     {
-        Debug.Log("collision"+otherCol.gameObject.name);
+        //Debug.Log("collision"+otherCol.gameObject.name);
 
 
         switch (otherCol.gameObject.tag)
@@ -197,13 +197,12 @@ public class SharkControll : MonoBehaviour {
                 break;
 
             case SHIP:
-                if (_sharkStats == SharkStats.Hungry)
+
+                if (EatList.Contains(otherCol.gameObject))
                 {
-                    if (EatList.Contains(otherCol.gameObject))
-                    {
-                        EatList.Remove(otherCol.gameObject);
-                    }
+                    EatList.Remove(otherCol.gameObject);
                 }
+                
                 break;
 
         }
@@ -290,13 +289,12 @@ public class SharkControll : MonoBehaviour {
                 break;
 
             case SHIP:
-                if (_sharkStats == SharkStats.Hungry)
+
+                if (EatList.Contains(otherCol.gameObject))
                 {
-                    if (EatList.Contains(otherCol.gameObject))
-                    {
-                        EatList.Remove(otherCol.gameObject);
-                    }
+                    EatList.Remove(otherCol.gameObject);
                 }
+                
                 break;
 
         }
