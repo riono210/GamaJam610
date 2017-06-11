@@ -122,9 +122,11 @@ public class BoatManager : MonoBehaviour {
 	// サメに食べられた時の処理
 	public void BoatDie(string boatName){
 		for (int i = 0; i < Boats.Length; i++) {
-			if (Boats [i].name == boatName) {
+			if (Boats [i].name == boatName && BoatsAlive[i]) {
 				//Die
-				Destroy(Boats[i]);
+				Boats[i].GetComponent<SpriteRenderer>().enabled = false;
+				enabled = false;
+
 				BoatsAlive [i] = false;
 			}
 		}
