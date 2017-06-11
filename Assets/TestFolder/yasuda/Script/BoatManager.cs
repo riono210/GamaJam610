@@ -14,27 +14,29 @@ public class BoatManager : MonoBehaviour {
 	bool[] BoatsAlive = new bool[BOATS_NUM];
 	// ボートの詳細の構造体配列
 	public BoatStr[] BoatArray = new BoatStr[BOATS_NUM];
-
-//	bool HaveTreasure =false;
-//
-//	bool Outward = true;
-//
-//	float Second = 0;
-//	float  Count;
-
+	// 出発できるボートの番号の配列
+	int[] DepartureBoat= new int[BOATS_NUM-1] ;
+	// 制限時間
 	float GameTime = 0;
+
+	int StageBoat = 0;
+
+	// DepartureBoatに追加する時の比較
+	int Adder = 0,Change = 0 ;
 
 	public struct BoatStr
 	{
-		public bool Outward;
-		public bool HaveTreashre;
-		public float Second;
-		public float Count;
+		public bool Outward;       // 往路
+		public bool HaveTreashre;  // 復路
+		public bool Go;             // 発射  
+		public float Second;       // 秒
+		public float Count;        // 財宝カウント
 
-		public BoatStr (bool outward, bool haveTreashre, float second, float count)
+		public BoatStr (bool outward, bool haveTreashre, bool go, float second, float count)
 		{
 			Outward = outward;
 			HaveTreashre = haveTreashre;
+			Go = go;
 			Second = second;
 			Count = count;
 		}
@@ -44,44 +46,45 @@ public class BoatManager : MonoBehaviour {
 	void Start () {
 		for(int i = 0; i < Boats.Length; i++){
 			BoatsAlive[i] = true;
-			BoatArray [i] = new BoatStr{ Outward = true, HaveTreashre = false, Second = 0, Count = 0 };
+			BoatArray [i] = new BoatStr{ Outward = true, HaveTreashre = false,Go = true, Second = 0, Count = 0 };
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-//		Departure (0);
-//		TreasureGet (0);
-
 		BoatControl ();
 	}
 
 	// 右端から出発
-	void Departure(int boatNum){
+	public void Departure(int boatNum){
+
 		if (BoatsAlive [boatNum]) {
 			BoatMove move = Boats [boatNum].GetComponent<BoatMove> ();
 			GameObject boat = Boats [boatNum];
+
+			GameObject mouseCheck;
 
 			if (BoatArray[boatNum].Outward) {			// 往路
 				move.setXSpeed (StratSpeed);
 			} else if (BoatArray[boatNum].HaveTreashre) {		// 復路
 				move.setXSpeed ((-StratSpeed) - (float)(BoatArray[boatNum].Count * 0.005));
-				Debug.Log ("Speed:" + move.xSpeed);
+				//Debug.Log ("Speed:" + move.xSpeed);
 			} else {
 				move.setXSpeed (0);
 			}
 
 			// 左端についた時の処理
 			if (boat.transform.position.x < -3.7f) {
-				Debug.Log ("stop");
+				//Debug.Log ("stop");
 				move.setXSpeed (0);
 				BoatArray[boatNum].Outward = false;
-				// ボタンを押したら帰る
-				if (Input.GetMouseButtonDown (0)) {
+				// 船をクリックしたら帰る
+				mouseCheck =  getClickObject();
+				if (mouseCheck != null && mouseCheck == boat) {
 					boat.transform.position = new Vector3 (-3.6f, boat.transform.position.y, 0);
 					boat.transform.Rotate (new Vector3 (0, 180, 0));
-					BoatArray[boatNum].Second = 0;
-					BoatArray[boatNum].HaveTreashre = true;
+					BoatArray [boatNum].Second = 0;
+					BoatArray [boatNum].HaveTreashre = true;
 				}
 			}		
 	
@@ -95,10 +98,6 @@ public class BoatManager : MonoBehaviour {
 			}
 		}
 	}
-
-//	void setOutward(bool sOutward){
-//		Outward = sOutward;
-//	}
 
 	// 財宝の取得及び速度設定
 	void TreasureGet(int boatNum){
@@ -116,6 +115,7 @@ public class BoatManager : MonoBehaviour {
 			BoatArray[boatNum].HaveTreashre = false;
 			BoatArray[boatNum].Outward = true;
 			BoatsAlive [boatNum] = false;
+			DepartureBoat [boatNum] = 0;
 		}
 	}
 		
@@ -128,43 +128,45 @@ public class BoatManager : MonoBehaviour {
 				enabled = false;
 
 				BoatsAlive [i] = false;
+				DepartureBoat [i] = 0;
 			}
 		}
 	}
 
-	void BoatControl(){
-		int timeSplit;
+	void BoatControl (){
+		// 経過時間を24で割ったもの
+		float timeSplit;
+
 
 		if (GameTime <= 120) {
 			GameTime += Time.deltaTime;
-			timeSplit = (int)GameTime / 24;
+			timeSplit = GameTime / 24;
+			Adder = (int)timeSplit;
 			Debug.Log ("Time:" + (int)GameTime);
-			Debug.Log ("sprit:" + timeSplit);
+			Debug.Log ("add:" + Adder);
 
 			Departure (0);
 			TreasureGet (0);
 
-			if (timeSplit >= 1) {
-				Departure (1);
-				TreasureGet (1);
-			}
-			if (timeSplit >= 2) {
-				Departure (2);
-				TreasureGet (2);
-			}
-			if (timeSplit >= 3) {
-				Departure (3);
-				TreasureGet (3);
-			}
-			if (timeSplit >= 4) {
-				Departure (4);
-				TreasureGet (4);
-			}
-
-			if (GameTime == 120) {
+			if (Change != Adder) {
+				DepartureBoat [Adder - 1] = Adder;
+				for (int i = 0; i < 5; i++) {
+					//Debug.Log ("list:" + DepartureBoat[i]);
+				}
 			}
 		}
+		Change = Adder;
+	
+		foreach (int num in DepartureBoat) {
+			Departure (num);
+			TreasureGet (num);
+		}
+		// 終了時
+		if (GameTime == 120) {
+			// しょりを書く
+		}
 	}
+	
 
 	public int getBoatAlive(){
 		int remain = 0;
@@ -174,5 +176,19 @@ public class BoatManager : MonoBehaviour {
 			}
 		}
 		return remain;
+	}
+
+	// 左クリックしたオブジェクトを取得する関数(2D)
+	private GameObject getClickObject() {
+		GameObject result = null;
+		// 左クリックされた場所のオブジェクトを取得
+		if (Input.GetMouseButtonDown (0)) {
+			Vector2 tapPoint = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+			Collider2D collition2d = Physics2D.OverlapPoint (tapPoint);
+			if (collition2d) {
+				result = collition2d.transform.gameObject;
+			}
+		}
+		return result;
 	}
 }
