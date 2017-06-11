@@ -20,10 +20,20 @@ public class FallingMgr : MonoBehaviour
     public GameObject[] prefabs = new GameObject[(int)FallObj.Obj_Num];
 
 
+    public SharkControll[] sharkCS = new SharkControll[FALLPOS_NUM];
+
     void Start ()
     {
         StartCoroutine(CoGeneratFallingObject());
 
+
+        for (int i = 0; i < FALLPOS_NUM; i++)
+        {
+            Vector3 newPos = fallPos[i].position;
+            newPos.x = sharkCS[i].transform.position.x;
+            fallPos[i].position = newPos;
+
+        }
 	}
 	
 	void Update ()
