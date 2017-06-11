@@ -112,7 +112,7 @@ public class SharkControll : MonoBehaviour {
 
     void OnCollisionEnter(Collision otherCol)
     {
-        Debug.Log("collision"+otherCol.gameObject.name);
+        //Debug.Log("collision"+otherCol.gameObject.name);
 
 
         switch (otherCol.gameObject.tag)
@@ -121,26 +121,36 @@ public class SharkControll : MonoBehaviour {
                 _hungryNum += RECOVERY_FISH_L;
                 Destroy(otherCol.gameObject);
 
-                _eatFishTime = EAT_FISH_TIME;
-                _sharkStats = SharkStats.Eating_fish;
+                if (_sharkStats != SharkStats.Eating_mushroom) {
+                    _eatFishTime = EAT_FISH_TIME;
+                    _sharkStats = SharkStats.Eating_fish;
+                }
                 break;
             case FISH_M:
                 _hungryNum += RECOVERY_FISH_M;
                 Destroy(otherCol.gameObject);
 
-                _eatFishTime = EAT_FISH_TIME;
-                _sharkStats = SharkStats.Eating_fish;
+                if (_sharkStats != SharkStats.Eating_mushroom)
+                {
+                    _eatFishTime = EAT_FISH_TIME;
+                    _sharkStats = SharkStats.Eating_fish;
+                }
                 break;
             case FISH_S:
                 _hungryNum += RECOVERY_FISH_S;
                 Destroy(otherCol.gameObject);
-
-                _eatFishTime = EAT_FISH_TIME;
-                _sharkStats = SharkStats.Eating_fish;
+                if (_sharkStats != SharkStats.Eating_mushroom)
+                {
+                    _eatFishTime = EAT_FISH_TIME;
+                    _sharkStats = SharkStats.Eating_fish;
+                }
                 break;
 
             case DUST:
-                _hungryNum -= RECOVERY_FISH_S;
+                if (_sharkStats != SharkStats.Eating_mushroom)
+                {
+                    _hungryNum -= RECOVERY_FISH_S;
+                }
                 Destroy(otherCol.gameObject);
 
                 break;
@@ -187,13 +197,12 @@ public class SharkControll : MonoBehaviour {
                 break;
 
             case SHIP:
-                if (_sharkStats == SharkStats.Hungry)
+
+                if (EatList.Contains(otherCol.gameObject))
                 {
-                    if (EatList.Contains(otherCol.gameObject))
-                    {
-                        EatList.Remove(otherCol.gameObject);
-                    }
+                    EatList.Remove(otherCol.gameObject);
                 }
+                
                 break;
 
         }
@@ -280,13 +289,12 @@ public class SharkControll : MonoBehaviour {
                 break;
 
             case SHIP:
-                if (_sharkStats == SharkStats.Hungry)
+
+                if (EatList.Contains(otherCol.gameObject))
                 {
-                    if (EatList.Contains(otherCol.gameObject))
-                    {
-                        EatList.Remove(otherCol.gameObject);
-                    }
+                    EatList.Remove(otherCol.gameObject);
                 }
+                
                 break;
 
         }
