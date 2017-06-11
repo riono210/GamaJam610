@@ -7,7 +7,7 @@ public class ResurtUI : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		_text = GetComponent<Text> ();	
-		_text.text = (GameMgr.Instance._score.treasurePoint + 100000f).ToString();
+		_text.text = (GameMgr.Instance._score.treasurePoint * 100000f).ToString();
 		(1 + GameMgr.Instance._score.aliveBoat * 0.1f).ToString ();
 
 

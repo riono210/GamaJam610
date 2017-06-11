@@ -7,7 +7,7 @@ public class AliveBoatPoint : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		_text = GetComponent<Text> ();
-		_text.text = (GameMgr.Instance._score.aliveBoat * 0.1f).ToString();
+		_text.text = (1f + GameMgr.Instance._score.aliveBoat * 0.1f).ToString();
 	
 	}
 	

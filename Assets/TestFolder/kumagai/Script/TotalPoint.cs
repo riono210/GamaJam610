@@ -7,7 +7,7 @@ public class TotalPoint : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		_text = GetComponent<Text> ();
-		_text.text = (GameMgr.Instance._score.treasurePoint*(GameMgr.Instance._score.aliveBoat * 0.1f)).ToString();
+		_text.text = (GameMgr.Instance._score.treasurePoint*(1f+GameMgr.Instance._score.aliveBoat * 0.1f)* 100000f).ToString();
 	// Use this for initialization
 	}
 
