@@ -14,9 +14,10 @@ public class Score
 public class GameMgr : SingletonMonoBehaviour<GameMgr> {
 
     public Score _score;
-    
 
-	void Awake()
+    BoatManager _boatMgr;
+
+    void Awake()
 	{
 		//このクラスのinstanceが2つ存在する場合、新しく作られたほうをDestroyする
 		if (Instance != null && Instance != this)
@@ -33,5 +34,13 @@ public class GameMgr : SingletonMonoBehaviour<GameMgr> {
 
 	}
 
-	
+	public void GameEnd()
+    {
+        _boatMgr = FindObjectOfType<BoatManager>();
+
+        //_score.treasurePoint = _boatMgr;
+        //_score.aliveBoat = _boatMgr.;
+
+        SceneManager.LoadScene("Result");
+    }
 }
