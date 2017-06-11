@@ -4,39 +4,58 @@ using UnityEngine;
 
 public class MoveObj : MonoBehaviour
 {
-    public float speed_y = 0.1f;
+    public float speed_y = 0.11f;
     public Rigidbody rg;
-    
 
-	void Start ()
+    float EndPosZ = 15.63f;
+    float StartPosZ = 0;
+
+    bool touchFlg = false;
+
+    void Start ()
     {
         rg = GetComponent<Rigidbody>();
 	}
 	
 	void Update ()
     {
-        transform.Translate(0, -speed_y, 0);
-
+        if (!touchFlg) {
+            transform.Translate(0, -speed_y, 0);
+        }
         if(transform.position.y < -5.0f)
         {
             Destroy(gameObject);
         }
 
+        if (touchFlg)
+        {
+            Vector3 newScale = transform.localScale;
+            newScale *= 0.984f;
+            transform.localScale = newScale;
+
+        }
+
+
         /*if (Input.GetMouseButtonDown(0))
         {
             rg.AddForce(0, 1f, 5f, ForceMode.Impulse);
         }*/
-        
 
-        Debug.Log(Vector3.Distance(this.transform.position, Input.mousePosition));
-        Vector3.Distance(this.transform.position, Input.mousePosition);
+        /*if (Input.GetMouseButtonDown(0)) {
+            Debug.Log(Input.mousePosition);
+            //Debug.Log(Vector3.Distance(this.transform.position, Input.mousePosition));
+            Vector3.Distance(transform.position, Input.mousePosition);
+        }*/
     }
 
     public void AddForceObj()
     {
-        if (transform.position.y < 0f)
+        if (transform.position.y < 0f && !touchFlg)
         {
-            rg.AddForce(0, 3f, 10f, ForceMode.Impulse);
+            //rg.AddForce(0, 3f, 10f, ForceMode.Impulse);
+            rg.velocity = new Vector3(0, 9f, 10f);
+            rg.useGravity = true;
+            touchFlg = true;
         }
     }
        
