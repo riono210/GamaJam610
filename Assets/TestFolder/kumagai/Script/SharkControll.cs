@@ -30,16 +30,23 @@ public class SharkControll : MonoBehaviour {
     [SerializeField]
     List<GameObject> EatList = new List<GameObject>();
 
-	// Use this for initialization
-	void Start () {
+    public Slider gauge;
+
+    Animator anim;
+
+    float _panicTimer;
+    const float PANIC_TIME = 4f;
+
+    // Use this for initialization
+    void Start () {
 		_hungryNum = Random.value * 0.8f + 0.2f;
 
         _boatMgr = FindObjectOfType<BoatManager>();
+        anim = GetComponent<Animator>();
 
     }
 
-    public Slider gauge;
-
+    
 	
 	// Update is called once per frame
 	void Update () {
@@ -65,6 +72,10 @@ public class SharkControll : MonoBehaviour {
                 {
                     _sharkStats = SharkStats.Sleeping;
                 }
+
+                EatingShip();
+
+
                 break;
 
             case SharkStats.Eating_fish:
@@ -74,10 +85,16 @@ public class SharkControll : MonoBehaviour {
                 break;
 
             case SharkStats.Eating_mushroom:
+                _panicTimer -= Time.deltaTime;
+                if (_panicTimer < 0)
+                {
+                    _panicTimer = 0;
+                    _sharkStats = SharkStats.Hungry;
+                }
                 break;
 
         }
-        
+        anim.SetInteger("status", (int)_sharkStats);
 	}
 
 
@@ -103,9 +120,12 @@ public class SharkControll : MonoBehaviour {
                 break;
 
             case DUST:
+                _hungryNum -= RECOVERY_FISH_S;
                 break;
 
             case MASH:
+                _sharkStats = SharkStats.Eating_mushroom;
+                _panicTimer = PANIC_TIME;
                 break;
 
             case SHIP:
@@ -156,11 +176,20 @@ public class SharkControll : MonoBehaviour {
 
     void EatingShip()
     {
-        if(_sharkStats == SharkStats.Hungry)
+        if (_sharkStats == SharkStats.Hungry)
         {
-            foreach (GameObject gobj in EatList)
-            {
-                _boatMgr.BoatDie(gobj.name);
+            if (EatList.Count != 0) {
+                GameObject tmp = new GameObject();
+                foreach (GameObject gobj in EatList)
+                {
+                    if (_boatMgr.gameObject != null)
+                    {
+                        tmp = gobj;
+                        _boatMgr.BoatDie(gobj.name);
+                    }
+
+                }
+                if(tmp != null) EatList.Remove(tmp);
             }
         }
     }
