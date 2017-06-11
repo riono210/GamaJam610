@@ -23,6 +23,8 @@ public class BoatManager : MonoBehaviour {
 
 	int DereatNum;
 
+	float StratTime;
+
 	// DepartureBoatに追加する時の比較
 	int Adder = 0,Change = 0 ;
 
@@ -58,6 +60,11 @@ public class BoatManager : MonoBehaviour {
 		BoatControl ();
 
 		Debug.Log ("stage:" + StageBoat);
+
+		for (int j=0; j < DepartureBoat.Length; j++){
+			Debug.Log("boat:"+DepartureBoat[j]);
+		}
+		GameEnd ();
 	}
 
 	// 右端から出発
@@ -121,6 +128,7 @@ public class BoatManager : MonoBehaviour {
 		}
 		// 6カウントすると初期位置に戻る(死亡)
 		if (BoatArray[boatNum].Second >= 6f) {
+			StratTime = GameTime;
 			boat.transform.position = new Vector3 (5, boat.transform.position.y, 0);
 			BoatArray[boatNum].Second = 0;
 			BoatArray[boatNum].HaveTreashre = false;
@@ -136,6 +144,7 @@ public class BoatManager : MonoBehaviour {
 	public void BoatDie(string boatName){
 		for (int i = 0; i < Boats.Length; i++) {
 			if (Boats [i].name == boatName && BoatsAlive[i]) {
+				StratTime = GameTime;
 				//Die
 				Boats[i].GetComponent<SpriteRenderer>().enabled = false;
 				enabled = false;
@@ -157,24 +166,21 @@ public class BoatManager : MonoBehaviour {
 			GameTime += Time.deltaTime;
 			timeSplit = GameTime / 24;
 			Adder = (int)timeSplit;
-			//Debug.Log ("Time:" + (int)GameTime);
+			Debug.Log ("Time:" + (int)GameTime);
 			//Debug.Log ("add:" + Adder);
 
 			// 比較して違っていたら配列に追加
 			if (Change != Adder || (Change == 0 && Adder == 0)) {
-				DepartureBoat [Adder] = Adder;
+				for (int i = 0; i > DepartureBoat.Length; i++) {
+					DepartureBoat [Adder] = Adder;
+				}
 			}
-		}
-		Change = Adder;
+			Change = Adder;
 	
-		for (int i = 0; i <= Adder; i++) {
-			Departure (i);
-			TreasureGet (i);
-		}
-			
-		// 終了時
-		if (GameTime == 120) {
-			// しょりを書く
+			for (int i = 0; i <= Adder; i++) {
+				Departure (i);
+				TreasureGet (i);
+			}
 		}
 	}
 	
@@ -203,20 +209,30 @@ public class BoatManager : MonoBehaviour {
 		return result;
 	}
 
-	void AddBoat(float startTime){
-		float endTime = GameTime;
-		int[] addArray;
 
-		if (StageBoat == 0 && (endTime - startTime) >= 0.1f) {
-			for (int i = 0; i > DepartureBoat.Length; i++) {
-				if (DepartureBoat [i] == DereatNum) {
-					addArray = new int[DereatNum - 1];
+	// 残骸，機能していない
+	void AddBoat(){
 
+		if (StageBoat == 0) {
+			for (int i = 0; i < DepartureBoat.Length; i++) {
+				Debug.Log ("lost");
+				if (DepartureBoat [0] == DereatNum) {
+					DepartureBoat [1] = 1;
+				}else if (DepartureBoat [i] == DereatNum) {
+					if (i + 1 == 6) {
+						break;
+					}
+					DepartureBoat [i + 1] = i + 1;
 				}
-
-
 			}
+		}
+	}
 
+	void GameEnd(){
+		// 終了時
+		if (GameTime >= 120 || getBoatAlive () == 0) {
+			BoatManager boats = GetComponent<BoatManager> ();
+			boats.enabled = false;
 		}
 	}
 }
