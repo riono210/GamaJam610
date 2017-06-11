@@ -72,6 +72,10 @@ public class SharkControll : MonoBehaviour {
                 {
                     _sharkStats = SharkStats.Sleeping;
                 }
+
+                EatingShip();
+
+
                 break;
 
             case SharkStats.Eating_fish:
@@ -172,11 +176,13 @@ public class SharkControll : MonoBehaviour {
 
     void EatingShip()
     {
-        if(_sharkStats == SharkStats.Hungry)
+        if (_sharkStats == SharkStats.Hungry)
         {
-            foreach (GameObject gobj in EatList)
-            {
-                _boatMgr.BoatDie(gobj.name);
+            if (EatList.Count != 0) {
+                foreach (GameObject gobj in EatList)
+                {
+                    _boatMgr.BoatDie(gobj.name);
+                }
             }
         }
     }
