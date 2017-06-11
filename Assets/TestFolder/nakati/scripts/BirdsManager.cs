@@ -29,7 +29,7 @@ public class BirdsManager : MonoBehaviour {
     {
 
         counttime += Time.deltaTime;
-        if (counttime > 1f)
+        if (counttime > 0.2f)
         {
             counttime = 0;
 
@@ -43,7 +43,7 @@ public class BirdsManager : MonoBehaviour {
             if(enable[z] == true)
             {
                 if (waitFlg[z] == false && upFlg[z] == false) {
-                    Vector3 newPos = _birdsPos[z].position;
+                    Vector2 newPos = _birdsPos[z].position;
                     newPos.y -= speed;
                     _birdsPos[z].position = newPos;
                 }
@@ -63,7 +63,7 @@ public class BirdsManager : MonoBehaviour {
 
                 if (upFlg[z] == true && waitFlg[z] == false)
                 {
-                    Vector3 newPos = _birdsPos[z].position;
+                    Vector2 newPos = _birdsPos[z].position;
                     newPos.y += speed;
                     _birdsPos[z].position = newPos;
                 }
