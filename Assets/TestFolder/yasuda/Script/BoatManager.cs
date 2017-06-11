@@ -15,7 +15,7 @@ public class BoatManager : MonoBehaviour {
 	// ボートの詳細の構造体配列
 	public BoatStr[] BoatArray = new BoatStr[BOATS_NUM];
 	// 出発できるボートの番号の配列
-	int[] DepartureBoat= new int[BOATS_NUM-1] ;
+	int[] DepartureBoat= new int[BOATS_NUM];
 	// 制限時間
 	float GameTime = 0;
 
@@ -28,11 +28,11 @@ public class BoatManager : MonoBehaviour {
 	{
 		public bool Outward;       // 往路
 		public bool HaveTreashre;  // 復路
-		public bool Go;             // 発射  
+		public bool Go;            // 発射  
 		public float Second;       // 秒
-		public float Count;        // 財宝カウント
+		public int Count;          // 財宝カウント
 
-		public BoatStr (bool outward, bool haveTreashre, bool go, float second, float count)
+		public BoatStr (bool outward, bool haveTreashre, bool go, float second, int count)
 		{
 			Outward = outward;
 			HaveTreashre = haveTreashre;
@@ -44,15 +44,18 @@ public class BoatManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		DepartureBoat [0] = 1;
 		for(int i = 0; i < Boats.Length; i++){
 			BoatsAlive[i] = true;
-			BoatArray [i] = new BoatStr{ Outward = true, HaveTreashre = false,Go = true, Second = 0, Count = 0 };
+			BoatArray [i] = new BoatStr{ Outward = true, HaveTreashre = false,Go = false, Second = 0, Count = 0 };
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		BoatControl ();
+
+		Debug.Log ("stage:" + StageBoat);
 	}
 
 	// 右端から出発
@@ -66,6 +69,10 @@ public class BoatManager : MonoBehaviour {
 
 			if (BoatArray[boatNum].Outward) {			// 往路
 				move.setXSpeed (StratSpeed);
+				if (!BoatArray [boatNum].Go) {
+					BoatArray [boatNum].Go = true;
+					StageBoat += 1;
+				}
 			} else if (BoatArray[boatNum].HaveTreashre) {		// 復路
 				move.setXSpeed ((-StratSpeed) - (float)(BoatArray[boatNum].Count * 0.005));
 				//Debug.Log ("Speed:" + move.xSpeed);
@@ -94,7 +101,9 @@ public class BoatManager : MonoBehaviour {
 				boat.transform.position = new Vector3 (5, boat.transform.position.y, 0);
 				BoatArray[boatNum].HaveTreashre = false;
 				BoatArray[boatNum].Outward = true;
+				BoatArray [boatNum].Go = false;
 				BoatsAlive[boatNum] = true;
+				StageBoat -= 1;
 			}
 		}
 	}
@@ -106,9 +115,9 @@ public class BoatManager : MonoBehaviour {
 		if (!BoatArray[boatNum].Outward && !BoatArray[boatNum].HaveTreashre) {
 			BoatArray[boatNum].Second += Time.deltaTime;
 			BoatArray[boatNum].Count = (int)BoatArray[boatNum].Second;
-			//Debug.Log ("Time:" + (int)Count);
+			//Debug.Log ("Count:" + BoatArray[boatNum].Count);
 		}
-		// 6カウントすると初期位置に戻る
+		// 6カウントすると初期位置に戻る(死亡)
 		if (BoatArray[boatNum].Second >= 6f) {
 			boat.transform.position = new Vector3 (5, boat.transform.position.y, 0);
 			BoatArray[boatNum].Second = 0;
@@ -116,6 +125,7 @@ public class BoatManager : MonoBehaviour {
 			BoatArray[boatNum].Outward = true;
 			BoatsAlive [boatNum] = false;
 			DepartureBoat [boatNum] = 0;
+			StageBoat -= 1;
 		}
 	}
 		
@@ -129,6 +139,7 @@ public class BoatManager : MonoBehaviour {
 
 				BoatsAlive [i] = false;
 				DepartureBoat [i] = 0;
+				StageBoat -= 1;
 			}
 		}
 	}
@@ -142,25 +153,21 @@ public class BoatManager : MonoBehaviour {
 			GameTime += Time.deltaTime;
 			timeSplit = GameTime / 24;
 			Adder = (int)timeSplit;
-			Debug.Log ("Time:" + (int)GameTime);
-			Debug.Log ("add:" + Adder);
+			//Debug.Log ("Time:" + (int)GameTime);
+			//Debug.Log ("add:" + Adder);
 
-			Departure (0);
-			TreasureGet (0);
-
-			if (Change != Adder) {
-				DepartureBoat [Adder - 1] = Adder;
-				for (int i = 0; i < 5; i++) {
-					//Debug.Log ("list:" + DepartureBoat[i]);
-				}
+			// 比較して違っていたら配列に追加
+			if (Change != Adder || (Change == 0 && Adder == 0)) {
+				DepartureBoat [Adder] = Adder;
 			}
 		}
 		Change = Adder;
 	
-		foreach (int num in DepartureBoat) {
-			Departure (num);
-			TreasureGet (num);
+		for (int i = 0; i <= Adder; i++) {
+			Departure (i);
+			TreasureGet (i);
 		}
+			
 		// 終了時
 		if (GameTime == 120) {
 			// しょりを書く
@@ -191,4 +198,16 @@ public class BoatManager : MonoBehaviour {
 		}
 		return result;
 	}
+
+	void AddBoat(float startTime){
+		float endTime = GameTime;
+		if (StageBoat == 0 && (endTime - startTime) >= 0.1f) {
+			
+		}
+
+
+	}
+
+
+
 }
