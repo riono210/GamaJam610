@@ -37,6 +37,8 @@ public class SharkControll : MonoBehaviour {
     float _panicTimer;
     const float PANIC_TIME = 4f;
 
+    float _eatFishTime;
+    const float EAT_FISH_TIME = 0.5f;
     // Use this for initialization
     void Start () {
 		_hungryNum = Random.value * 0.8f + 0.2f;
@@ -72,9 +74,19 @@ public class SharkControll : MonoBehaviour {
                 {
                     _sharkStats = SharkStats.Sleeping;
                 }
+
+                EatingShip();
+
+
                 break;
 
             case SharkStats.Eating_fish:
+                _eatFishTime -= Time.deltaTime;
+                if (_eatFishTime < 0)
+                {
+                    _eatFishTime = 0;
+                    _sharkStats = SharkStats.Hungry;
+                }
                 break;
 
             case SharkStats.Eating_dust:
@@ -105,14 +117,24 @@ public class SharkControll : MonoBehaviour {
         {
             case FISH_L:
                 _hungryNum += RECOVERY_FISH_L;
+                Destroy(otherCol.gameObject);
+
+                _eatFishTime = EAT_FISH_TIME;
+                _sharkStats = SharkStats.Eating_fish;
                 break;
             case FISH_M:
                 _hungryNum += RECOVERY_FISH_M;
+                Destroy(otherCol.gameObject);
 
+                _eatFishTime = EAT_FISH_TIME;
+                _sharkStats = SharkStats.Eating_fish;
                 break;
             case FISH_S:
                 _hungryNum += RECOVERY_FISH_S;
+                Destroy(otherCol.gameObject);
 
+                _eatFishTime = EAT_FISH_TIME;
+                _sharkStats = SharkStats.Eating_fish;
                 break;
 
             case DUST:
@@ -122,6 +144,8 @@ public class SharkControll : MonoBehaviour {
             case MASH:
                 _sharkStats = SharkStats.Eating_mushroom;
                 _panicTimer = PANIC_TIME;
+                Destroy(otherCol.gameObject);
+
                 break;
 
             case SHIP:
@@ -172,11 +196,20 @@ public class SharkControll : MonoBehaviour {
 
     void EatingShip()
     {
-        if(_sharkStats == SharkStats.Hungry)
+        if (_sharkStats == SharkStats.Hungry)
         {
-            foreach (GameObject gobj in EatList)
-            {
-                _boatMgr.BoatDie(gobj.name);
+            if (EatList.Count != 0) {
+                GameObject tmp = new GameObject();
+                foreach (GameObject gobj in EatList)
+                {
+                    if (_boatMgr.gameObject != null)
+                    {
+                        tmp = gobj;
+                        _boatMgr.BoatDie(gobj.name);
+                    }
+
+                }
+                if(tmp != null) EatList.Remove(tmp);
             }
         }
     }
