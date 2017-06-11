@@ -125,6 +125,7 @@ public class BoatManager : MonoBehaviour {
 			if (Boats [i].name == boatName) {
 				//Die
 				Destroy(Boats[i]);
+				BoatsAlive [i] = false;
 			}
 		}
 	}
