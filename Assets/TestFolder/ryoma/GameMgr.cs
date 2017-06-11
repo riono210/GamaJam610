@@ -48,6 +48,8 @@ public class GameMgr : SingletonMonoBehaviour<GameMgr> {
         _score.treasurePoint = totalPoint;
         _score.aliveBoat = _boatMgr.getBoatAlive();
 
-        SceneManager.LoadScene("Result");
+
+        FindObjectOfType<FadeCtrl.FadeController>().StartFadeOut("Result");
+        //SceneManager.LoadScene("Result");
     }
 }

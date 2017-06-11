@@ -50,7 +50,7 @@ public class MoveObj : MonoBehaviour
 
     public void AddForceObj()
     {
-        if (transform.position.y < 0f && !touchFlg)
+        if (!touchFlg)
         {
             //rg.AddForce(0, 3f, 10f, ForceMode.Impulse);
             rg.velocity = new Vector3(0, 9f, 10f);
