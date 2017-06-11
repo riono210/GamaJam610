@@ -21,6 +21,7 @@ public class Timer : MonoBehaviour {
         if (remainTime <= 0)
         {
             //終わった時の処理
+            GameMgr.Instance.GameEnd();
         }
 
     }

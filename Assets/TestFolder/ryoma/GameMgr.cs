@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 [System.Serializable]
 public class Score
 {
-    public int treasurePoint;
+    public float treasurePoint;
     public int aliveBoat;
 }
 
@@ -38,8 +38,15 @@ public class GameMgr : SingletonMonoBehaviour<GameMgr> {
     {
         _boatMgr = FindObjectOfType<BoatManager>();
 
-        //_score.treasurePoint = _boatMgr;
-        //_score.aliveBoat = _boatMgr.;
+        
+        float totalPoint = 0;
+        for (int i = 0; i < _boatMgr.BoatArray.Length; i++)
+        {
+            totalPoint += _boatMgr.BoatArray[i].Count;
+        }
+
+        _score.treasurePoint = totalPoint;
+        _score.aliveBoat = _boatMgr.getBoatAlive();
 
         SceneManager.LoadScene("Result");
     }
