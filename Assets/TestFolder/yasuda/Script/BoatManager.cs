@@ -13,7 +13,7 @@ public class BoatManager : MonoBehaviour {
 	// ボートの生存
 	bool[] BoatsAlive = new bool[BOATS_NUM];
 	// ボートの詳細の構造体配列
-	BoatStr[] BoatArray = new BoatStr[BOATS_NUM];
+	public BoatStr[] BoatArray = new BoatStr[BOATS_NUM];
 
 //	bool HaveTreasure =false;
 //
@@ -122,9 +122,11 @@ public class BoatManager : MonoBehaviour {
 	// サメに食べられた時の処理
 	public void BoatDie(string boatName){
 		for (int i = 0; i < Boats.Length; i++) {
-			if (Boats [i].name == boatName) {
+			if (Boats [i].name == boatName && BoatsAlive[i]) {
 				//Die
-				Destroy(Boats[i]);
+				Boats[i].GetComponent<SpriteRenderer>().enabled = false;
+				enabled = false;
+
 				BoatsAlive [i] = false;
 			}
 		}
@@ -162,5 +164,15 @@ public class BoatManager : MonoBehaviour {
 			if (GameTime == 120) {
 			}
 		}
+	}
+
+	public int getBoatAlive(){
+		int remain = 0;
+		for (int i = 0; i < 5; i++) {
+			if (BoatsAlive [i] == true) {
+				remain++;
+			}
+		}
+		return remain;
 	}
 }
