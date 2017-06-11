@@ -21,6 +21,8 @@ public class BoatManager : MonoBehaviour {
 
 	int StageBoat = 0;
 
+	int DereatNum;
+
 	// DepartureBoatに追加する時の比較
 	int Adder = 0,Change = 0 ;
 
@@ -126,6 +128,7 @@ public class BoatManager : MonoBehaviour {
 			BoatsAlive [boatNum] = false;
 			DepartureBoat [boatNum] = 0;
 			StageBoat -= 1;
+			DereatNum = boatNum;
 		}
 	}
 		
@@ -140,6 +143,7 @@ public class BoatManager : MonoBehaviour {
 				BoatsAlive [i] = false;
 				DepartureBoat [i] = 0;
 				StageBoat -= 1;
+				DereatNum = i;
 			}
 		}
 	}
@@ -201,13 +205,18 @@ public class BoatManager : MonoBehaviour {
 
 	void AddBoat(float startTime){
 		float endTime = GameTime;
+		int[] addArray;
+
 		if (StageBoat == 0 && (endTime - startTime) >= 0.1f) {
-			
+			for (int i = 0; i > DepartureBoat.Length; i++) {
+				if (DepartureBoat [i] == DereatNum) {
+					addArray = new int[DereatNum - 1];
+
+				}
+
+
+			}
+
 		}
-
-
 	}
-
-
-
 }
