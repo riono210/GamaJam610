@@ -165,4 +165,8 @@ public class BoatManager : MonoBehaviour {
 			}
 		}
 	}
+
+	bool getBoatAlive(int boatNum){
+		return BoatsAlive [boatNum];
+	}
 }
