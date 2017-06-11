@@ -179,10 +179,17 @@ public class SharkControll : MonoBehaviour {
         if (_sharkStats == SharkStats.Hungry)
         {
             if (EatList.Count != 0) {
+                GameObject tmp = new GameObject();
                 foreach (GameObject gobj in EatList)
                 {
-                    _boatMgr.BoatDie(gobj.name);
+                    if (_boatMgr.gameObject != null)
+                    {
+                        tmp = gobj;
+                        _boatMgr.BoatDie(gobj.name);
+                    }
+
                 }
+                if(tmp != null) EatList.Remove(tmp);
             }
         }
     }
