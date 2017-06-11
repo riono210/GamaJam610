@@ -34,6 +34,9 @@ public class SharkControll : MonoBehaviour {
 
     Animator anim;
 
+    float _panicTimer;
+    const float PANIC_TIME = 4f;
+
     // Use this for initialization
     void Start () {
 		_hungryNum = Random.value * 0.8f + 0.2f;
@@ -78,6 +81,12 @@ public class SharkControll : MonoBehaviour {
                 break;
 
             case SharkStats.Eating_mushroom:
+                _panicTimer -= Time.deltaTime;
+                if (_panicTimer < 0)
+                {
+                    _panicTimer = 0;
+                    _sharkStats = SharkStats.Hungry;
+                }
                 break;
 
         }
@@ -107,9 +116,12 @@ public class SharkControll : MonoBehaviour {
                 break;
 
             case DUST:
+                _hungryNum -= RECOVERY_FISH_S;
                 break;
 
             case MASH:
+                _sharkStats = SharkStats.Eating_mushroom;
+                _panicTimer = PANIC_TIME;
                 break;
 
             case SHIP:
