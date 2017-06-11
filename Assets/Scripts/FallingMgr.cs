@@ -7,7 +7,7 @@ public class FallingMgr : MonoBehaviour
 
     const int FALLPOS_NUM = 3; 
     public Transform[] fallPos = new Transform[FALLPOS_NUM];
-    float  createMargin = 0.4f;    
+    float  createMargin = 1f;    
     public enum FallObj
     {
         LargeFish,
