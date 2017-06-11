@@ -55,6 +55,11 @@ public class BirdsManager : MonoBehaviour {
                 }
 
 
+                if (Input.GetMouseButtonDown(0))
+                {
+                    waitFlg[z] = false;
+                    upFlg[z] = true;
+                }
 
                 if (upFlg[z] == true && waitFlg[z] == false)
                 {
@@ -63,14 +68,17 @@ public class BirdsManager : MonoBehaviour {
                     _birdsPos[z].position = newPos;
                 }
 
-                if (Input.GetMouseButtonDown(0))
+                if (_birdsPos[z].position.y > 30 && upFlg[z] == true)
                 {
-                    waitFlg[z] = false;
-                    upFlg[z] = true;
+                    upFlg[z] = false;
+
                 }
+
             }
 
+            enable[z] = false;
 
         }
+
     }
 }
